@@ -8,6 +8,7 @@ import {
 const productSchema = new Schema<IProduct>(
   {
     name: { type: String, required: true },
+    slug: { type: String, required: true, unique: true },
     price: { type: Number, required: true },
     category: {
       type: String,

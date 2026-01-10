@@ -21,7 +21,26 @@ export const massCreateProducts = asyncHandler(
     if (!Array.isArray(productsData) || productsData.length === 0) {
       throw new HttpError(HTTP_CODES.BAD_REQUEST, "Invalid products data");
     }
-    const createdProducts = await Product.insertMany(productsData);
+
+    const addSlugToProducts = productsData.map((product: any) => {
+      return {
+        ...product,
+        slug: product.name.toLowerCase().replace(/\s+/g, "-"),
+      };
+    });
+
+    const existingSlugs = await Product.find({
+      slug: { $in: addSlugToProducts.map((p: any) => p.slug) },
+    }).select("slug");
+    if (existingSlugs.length > 0) {
+      const existingSlugList = existingSlugs.map((p) => p.slug).join(", ");
+      throw new HttpError(
+        HTTP_CODES.CONFLICT,
+        `The following products already exist: ${existingSlugList}`
+      );
+    }
+
+    const createdProducts = await Product.insertMany(addSlugToProducts);
     if (!createdProducts || createdProducts.length === 0) {
       throw new HttpError(
         HTTP_CODES.INTERNAL_SERVER_ERROR,
@@ -34,5 +53,18 @@ export const massCreateProducts = asyncHandler(
       "Successfully created products",
       createdProducts
     );
+  }
+);
+
+export const getProduct = asyncHandler(
+  async (req: Request, res: Response) => {
+    const productSlug = req.params.slug as string;
+    const product = await Product.findOne({ slug: productSlug }).select(
+      "-supplierDetails"
+    );
+    if (!product) {
+      throw new HttpError(HTTP_CODES.NOT_FOUND, "Product not found");
+    }
+    sendResponse(res, HTTP_CODES.OK, "Successfully fetched product", product);
   }
 );

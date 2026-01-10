@@ -17,6 +17,7 @@ export type ItemType = (typeof ITEM_TYPE_VALUES)[number];
 
 export interface IProduct {
   name: string;
+  slug: string;
   price: number;
   category: ItemType;
   image: string;

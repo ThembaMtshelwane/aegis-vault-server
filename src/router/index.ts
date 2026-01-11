@@ -7,6 +7,9 @@ import cartRoutes from "../modules/cart/cart.route.js";
 
 const router = Router();
 
+router.get("/", (req, res) => {
+  res.send("API is running...");
+});
 router.use("/auth", authRoutes);
 router.use("/users", authenticate, userRoutes);
 router.use("/products", productRoutes);

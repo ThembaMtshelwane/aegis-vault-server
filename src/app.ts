@@ -3,18 +3,23 @@ import { corsMiddleware } from "./middleware/cors.middleware.js";
 import { errorHandler, notFound } from "./middleware/error.middleware.js";
 import cookieParser from "cookie-parser";
 import routes from "./router/index.js";
+import { connectDatabase } from "./config/database.js";
+import ENV_VARS from "./consts/env.consts.js";
 
-export const createApp = () => {
-  const app: Application = express();
+const app: Application = express();
 
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-  app.use(cookieParser());
-  app.use(corsMiddleware);
+// Connect to DB (Vercel will reuse this connection across lambda calls)
+connectDatabase(ENV_VARS.MONGO_URI);
 
-  app.use("/api", routes);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(corsMiddleware);
 
-  app.use(notFound);
-  app.use(errorHandler);
-  return app;
-};
+app.use("/api", routes);
+
+app.use(notFound);
+app.use(errorHandler);
+
+// Vercel needs the app instance exported as default
+export default app;

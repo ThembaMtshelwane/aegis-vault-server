@@ -11,10 +11,10 @@ const app: Application = express();
 // Connect to DB (Vercel will reuse this connection across lambda calls)
 connectDatabase(ENV_VARS.MONGO_URI);
 
+app.use(corsMiddleware);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(corsMiddleware);
 
 app.use("/api", routes);
 

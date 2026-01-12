@@ -2,15 +2,24 @@ import cors, { type CorsOptions } from "cors";
 import ENV_VARS from "../consts/env.consts.js";
 
 const getAllowedOrigins = (): string[] => {
-  const origins = [
-    "http://localhost:3000",
-    "https://aegis-vault-seven.vercel.app",
-  ];
+  const origins = [ENV_VARS.DEV_CLIENT_URL, ENV_VARS.CLIENT_URL];
   return origins;
 };
 
 const corsOptions: CorsOptions = {
-  origin: "http://localhost:3000",
+  origin: (origin, callback) => {
+    const allowedOrigins = getAllowedOrigins();
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    // Check if the origin is in the allowed list
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,

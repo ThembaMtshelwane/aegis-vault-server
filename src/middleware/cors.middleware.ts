@@ -2,7 +2,10 @@ import cors, { type CorsOptions } from "cors";
 import ENV_VARS from "../consts/env.consts.js";
 
 const getAllowedOrigins = (): string[] => {
-  const origins = [ENV_VARS.DEV_CLIENT_URL, ENV_VARS.CLIENT_URL];
+  const origins = [
+    "http://localhost:3000",
+    "https://aegis-vault-seven.vercel.app",
+  ];
   return origins;
 };
 

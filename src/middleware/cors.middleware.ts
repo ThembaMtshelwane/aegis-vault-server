@@ -6,9 +6,6 @@ const getAllowedOrigins = (): string[] => {
     "http://localhost:3000",
     "https://aegis-vault-seven.vercel.app",
   ];
-  // if (ENV_VARS.NODE_ENV === "production") {
-  //   origins.push(ENV_VARS.CLIENT_URL);
-  // }
   return origins;
 };
 

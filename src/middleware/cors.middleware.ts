@@ -4,7 +4,7 @@ import ENV_VARS from "../consts/env.consts.js";
 const getAllowedOrigins = (): string[] => {
   const origins = [
     "http://localhost:3000",
-    "https://aegis-vault-seven.vercel.app/shop",
+    "https://aegis-vault-seven.vercel.app",
   ];
   // if (ENV_VARS.NODE_ENV === "production") {
   //   origins.push(ENV_VARS.CLIENT_URL);

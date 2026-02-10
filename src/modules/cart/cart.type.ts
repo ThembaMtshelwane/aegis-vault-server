@@ -2,6 +2,7 @@ import type { Schema } from "mongoose";
 import type { IProduct } from "../products/product.type.js";
 
 export interface ICartItem {
+  userId: Schema.Types.ObjectId;
   product: IProduct;
   quantity: number;
   price: number; // item price * quantity
